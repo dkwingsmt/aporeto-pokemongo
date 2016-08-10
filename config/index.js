@@ -8,6 +8,8 @@ const localip = ip.address()
 const debug = _debug('app:config')
 debug('Creating default configuration.')
 
+console.log(process.env.LOCALHOST)
+
 // ========================================================
 // Default Configuration
 // ========================================================
@@ -26,7 +28,7 @@ const config = {
   // ----------------------------------
   // Server Configuration
   // ----------------------------------
-  server_host : localip, // use string 'localhost' to prevent exposure on local network
+  server_host : process.env.LOCALHOST ? '127.0.0.1' : 'ec2-52-42-141-105.us-west-2.compute.amazonaws.com', // use string 'localhost' to prevent exposure on local network
   server_port : process.env.PORT || 3000,
 
   // ----------------------------------
