@@ -8,8 +8,6 @@ const localip = ip.address()
 const debug = _debug('app:config')
 debug('Creating default configuration.')
 
-console.log(process.env.LOCALHOST)
-
 // ========================================================
 // Default Configuration
 // ========================================================

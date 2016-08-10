@@ -76,7 +76,8 @@ if (__DEV__) {
         unused: true,
         dead_code: true,
         warnings: false
-      }
+      },
+      comments: false,
     })
   )
 }
