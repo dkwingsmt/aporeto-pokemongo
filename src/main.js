@@ -1,10 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import createBrowserHistory from 'history/lib/createBrowserHistory'
+import firebase from 'firebase'
 import { useRouterHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
+import createBrowserHistory from 'history/lib/createBrowserHistory'
 import createStore from './store/createStore'
+import { loginSuccess, logoutSuccess } from './store/auth'
 import AppContainer from './containers/AppContainer'
+
+// Initialize Firebase
+firebase.initializeApp({
+  apiKey: "AIzaSyA2myVJkO-gqrbKYTqAD2GVu2IIwoNi9b8",
+  authDomain: "aporeto-pokemongo.firebaseapp.com",
+  databaseURL: "https://aporeto-pokemongo.firebaseio.com",
+  storageBucket: "aporeto-pokemongo.appspot.com",
+})
 
 // ========================================================
 // Browser History Setup
@@ -25,6 +35,14 @@ const store = createStore(initialState, browserHistory)
 const history = syncHistoryWithStore(browserHistory, store, {
   selectLocationState: (state) => state.router
 })
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    store.dispatch(loginSuccess(user))
+  } else {
+    store.dispatch(logoutSuccess())
+  }
+});
 
 // ========================================================
 // Developer Tools Setup

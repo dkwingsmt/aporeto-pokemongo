@@ -1,28 +1,42 @@
 import React, { Component } from 'react'
+import GoogleButton from 'react-google-button'
+import firebase from 'firebase'
+import { withRouter } from 'react-router'
+import provider from 'auth/providers/google'
+import { connect } from 'react-redux'
+import { loginError } from '../modules'
+//import { PromiseAction } from 'store/promise-action'
 
-export class component extends Component {
-  componentDidMount() {
-    gapi.signin2.render('google-signin', {
-      'scope': 'https://www.googleapis.com/auth/plus.login',
-      'width': 200,
-      'height': 50,
-      'longtitle': true,
-      'theme': 'dark',
-      'onsuccess': this.onSignIn,
-    }); 
+export default 
+@withRouter
+@connect(
+  (state) => ({
+    error: state.login.error,
+  }),
+  {
+    loginError,
+  },
+)
+class LoginContainer extends Component {
+  componentWillMount() {
+    this.props.loginError()
   }
 
-  onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail());
+  onSignIn = (googleUser) => {
+    return firebase.auth().signInWithPopup(provider)
+      .then(() => this.props.router.push('/timeline'))
+      .catch((err) => this.props.loginError(err))
   }
 
   render() {
+    const {error} = this.props
     return (
-      <div id='google-signin' />
+      <div>
+        {
+          error && <div>{`Error: ${error}`}</div>
+        }
+        <GoogleButton onClick={this.onSignIn} />
+      </div>
     )
   }
 }

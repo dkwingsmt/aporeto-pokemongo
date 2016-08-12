@@ -1,16 +1,15 @@
 import { injectReducer } from '../../store/reducers'
 
 export default (store) => ({
-  path: 'login',
+  path: 'timeline',
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
-      const Google = require('./containers/google').default
+      const component = require('./containers').default
       const reducer = require('./modules').default
+      injectReducer(store, { key: 'timeline', reducer })
 
-      injectReducer(store, { key: 'login', reducer })
+      cb(null, component)
 
-      cb(null, Google)
-
-    }, 'login')
+    }, 'timeline')
   },
 })
