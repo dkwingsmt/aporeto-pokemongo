@@ -4,6 +4,7 @@ import firebase from 'firebase'
 import { withRouter } from 'react-router'
 import provider from 'auth/providers/google'
 import { connect } from 'react-redux'
+import { loginSuccess } from 'store/auth'
 import { loginError } from '../modules'
 //import { PromiseAction } from 'store/promise-action'
 
@@ -15,16 +16,18 @@ export default
   }),
   {
     loginError,
+    loginSuccess,
   },
 )
 class LoginContainer extends Component {
-  componentWillMount() {
-    this.props.loginError()
-  }
-
   onSignIn = (googleUser) => {
     return firebase.auth().signInWithPopup(provider)
-      .then(() => this.props.router.push('/timeline'))
+      .then((result) => {
+        if (result.user) {
+          this.props.loginSuccess(result.user)
+          this.props.router.push('/timeline')
+        }
+      })
       .catch((err) => this.props.loginError(err))
   }
 

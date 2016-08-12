@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import firebase from 'firebase'
 import { useRouterHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
+import { get } from 'lodash'
 import createBrowserHistory from 'history/lib/createBrowserHistory'
 import createStore from './store/createStore'
 import { loginSuccess, logoutSuccess } from './store/auth'
@@ -33,8 +34,10 @@ const browserHistory = useRouterHistory(createBrowserHistory)({
 const initialState = window.___INITIAL_STATE__
 const store = createStore(initialState, browserHistory)
 const history = syncHistoryWithStore(browserHistory, store, {
-  selectLocationState: (state) => state.router
+  selectLocationState: (state) => state.router,
 })
+window.store = store
+window.getStore = (path) => path && path.length ? get(store.getState(), path) : store.getState()
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
@@ -42,7 +45,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   } else {
     store.dispatch(logoutSuccess())
   }
-});
+})
 
 // ========================================================
 // Developer Tools Setup

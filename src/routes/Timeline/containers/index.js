@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router'
 import firebase from 'firebase'
+import { logoutSuccess } from 'store/auth'
 import { timelineError } from '../modules'
 
 export default
@@ -13,6 +14,7 @@ export default
   }),
   {
     timelineError,
+    logoutSuccess,
   }
 )
 class TimelineContainer extends Component {
@@ -31,7 +33,10 @@ class TimelineContainer extends Component {
         <Link to='/logout' onClick={(e) => {
           e.preventDefault()
           firebase.auth().signOut()
-            .then(() => this.props.router.push('/login'))
+            .then(() => {
+              this.props.logoutSuccess()
+              this.props.router.push('/login')
+            })
             .catch((e) => this.props.timelineError(e))
         }}>
           Log out
