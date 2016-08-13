@@ -46,5 +46,6 @@ module.exports = {
       },
     },
     'import/core-modules': ['electron'],
+    'import/extensions': ['', '.js', '.jsx', '.es', '.coffee', '.cjsx'],
   },
 }
