@@ -4,6 +4,7 @@ import { withRouter, Link } from 'react-router'
 import firebase from 'firebase'
 import { logoutSuccess } from 'store/auth'
 import { timelineError } from '../modules'
+import PostPanel from './post'
 
 export default
 @withRouter
@@ -29,6 +30,7 @@ class TimelineContainer extends Component {
         {
           error && <div>{`Error: ${error}`}</div>
         }
+        <PostPanel />
         {user ? `Logged in! ${user.uid}` : 'Didnt log in'}
         <Link to='/logout' onClick={(e) => {
           e.preventDefault()

@@ -2,7 +2,6 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
 
 export function loginSuccess(user) {
-  console.log('loginSuccess')
   return {
     type: LOGIN_SUCCESS,
     user,
@@ -10,7 +9,6 @@ export function loginSuccess(user) {
 }
 
 export function logoutSuccess() {
-  console.log('logoutSuccess')
   return {
     type: LOGOUT_SUCCESS,
   }
