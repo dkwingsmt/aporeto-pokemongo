@@ -1,31 +1,105 @@
-.post-container {
+$resultHeight: 40px;
+
+.postContainer {
   position: static;
   left: 0;
   right: 0;
-  width: 100%;
   height: 100%;
   margin: 10px;
   padding: 5px;
+  background-color: #fdfdfd;
+  border: 3.5px solid rgba(147, 146, 222, 0.56);
+  border-radius: 5px;
+}
+
+.searchContainer {
+}
+
+.searchInput {
+  width: 100%;
+  input {
+  }
+}
+
+.searchResult {
   background-color: white;
-  border: 1px solid black;
 }
 
-.search-container {
-}
-
-.search-input {
-}
-
-.search-result {
+.searchResultItem {
   background-color: white;
-  border: 1px solid grey;
-  padding: 5px;
-}
-
-.search-result-item {
-  background-color: white;
+  display: flex;
+  padding: 3px;
+  border: 1px solid #ddd;
 
   &:hover {
     background-color: grey;
+  }
+
+  .resultLeft {
+    display: inline-block;
+    width: $resultHeight;
+    height: $resultHeight;
+  }
+
+  .resultRight {
+    display: inline-block;
+    flex: 1;
+    padding: 5px 9px;
+
+    .resultId {
+      text-align: left;
+      display: block;
+      font-size: 12px;
+      line-height: 10px;
+      color: #999;
+    }
+    .resultName {
+      text-align: left;
+      display: block;
+      font-size: 16px;
+      color: #333;
+    }
+  }
+}
+
+.toPost {
+  display: flex;
+
+  .toPostLeft {
+    display: inline-block;
+  }
+
+  .toPostRight {
+    display: inline-block;
+    flex: 1;
+    margin-left: 15px;
+
+    .toPostLine {
+      border-bottom: 1px solid #dddddd;
+      margin-top: 3px;
+      text-align: left;
+
+      .toPostLineIcon {
+        color: #777;
+        margin-right: 7px;
+      }
+
+      .toPostLineContents {
+        color: #777;
+      }
+    }
+  }
+}
+
+.actionRow {
+  display: flex;
+  margin-top: 8px;
+
+  .actionRowFiller {
+    flex: 1;
+
+  }
+  button {
+    margin-left: 5px;
   }
 }
