@@ -3,15 +3,15 @@ import { connect } from 'react-redux'
 import FontAwesome from 'react-fontawesome' 
 import { Button } from 'react-bootstrap' 
 //import { Link } from 'react-router'
-import firebase from 'firebase'
 import SearchInput, { createFilter } from 'react-search-input'
 import { map } from 'lodash'
 
-import { submitPost, postError } from '../modules'
-import { setDraftInfo, clearDraftInfo } from '../modules/draft'
+import { postError } from '../modules'
+import { submitPost, setDraftInfo, clearDraftInfo } from '../modules/draft'
 import css from './post.scss'
 import pokemonsObject from 'static/pokemons.json'
 import PmImg from 'components/PmImg'
+import AlertBar from 'components/AlertBar'
 
 const fullPokemonList = map(pokemonsObject, (name, id) => ({id, name}))
 const KEYS_TO_FILTERS = ['id', 'name']
@@ -102,6 +102,7 @@ export default
   (state) => ({
     user: state.auth.user,
     draft: state.timeline.draft.contents,
+    alert: state.timeline.draft.alert,
   }),
   {
     submitPost,
@@ -135,15 +136,12 @@ class PostPanel extends Component {
 
   onSubmit = () => {
     this.setState({isSubmitting: true})
-    const submitPromise = firebase.database().ref().child('posts').push({
-      ...this.props.draft,
-      userId: this.props.user.uid,
-    })
-    submitPromise
+    this.props.submitPost(this.props.user.uid)
       .then(() => {
-        this.props.clearDraftInfo()
+        this.setState({isSubmitting: false})
       })
       .catch((error) => {
+        this.setState({isSubmitting: false})
       })
   }
 
@@ -164,6 +162,7 @@ class PostPanel extends Component {
           />
         }
         </div>
+        <AlertBar {...this.props.alert} />
         <div className={css.actionRow}>
           <div className={css.actionRowFiller}></div>
           <Button

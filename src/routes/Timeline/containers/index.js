@@ -5,13 +5,14 @@ import firebase from 'firebase'
 import { logoutSuccess } from 'store/auth'
 import { timelineError } from '../modules'
 import PostPanel from './post'
+import AlertBar from 'components/AlertBar'
 
 export default
 @withRouter
 @connect(
   (state) => ({
     user: state.auth.user,
-    error: state.timeline.error,
+    alert: state.timeline.alert,
   }),
   {
     timelineError,
@@ -27,9 +28,7 @@ class TimelineContainer extends Component {
     const {user, error} = this.props
     return (
       <div>
-        {
-          error && <div>{`Error: ${error}`}</div>
-        }
+        <AlertBar {...this.props.alert} />
         <PostPanel />
         {user ? `Logged in! ${user.uid}` : 'Didnt log in'}
         <Link to='/logout' onClick={(e) => {
