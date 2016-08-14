@@ -1,18 +1,23 @@
 import firebase from 'firebase'
 import { errorReducerFactory } from 'utils/actions'
 import { PromiseAction } from 'store/promise-action'
+import { combineReducers } from 'redux'
 
-export default function reducer(state={}, action) {
+import draftReducer from './draft'
+
+function errorReducer(state=null, action) {
   const {type} = action
   switch (type) {
     case '@@Timeline@Error':
-      return {
-        ...state,
-        error: action.error,
-      }
+      return action.error || null
   }
   return state
 }
+
+export default combineReducers({
+  error: errorReducer,
+  draft: draftReducer,
+})
 
 export const timelineError = errorReducerFactory('Timeline')
 export const postError = errorReducerFactory('Timeline/Post')

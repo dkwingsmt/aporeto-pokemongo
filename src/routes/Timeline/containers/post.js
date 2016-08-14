@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 import FontAwesome from 'react-fontawesome' 
 import { Button } from 'react-bootstrap' 
 //import { Link } from 'react-router'
-//import firebase from 'firebase'
+import firebase from 'firebase'
 import SearchInput, { createFilter } from 'react-search-input'
 import { map } from 'lodash'
 
 import { submitPost, postError } from '../modules'
+import { setDraftInfo, clearDraftInfo } from '../modules/draft'
 import css from './post.scss'
 import pokemonsObject from 'static/pokemons.json'
 import PmImg from 'components/PmImg'
@@ -100,17 +101,20 @@ export default
 @connect(
   (state) => ({
     user: state.auth.user,
+    draft: state.timeline.draft.contents,
   }),
   {
     submitPost,
     postError,
+    setDraftInfo,
+    clearDraftInfo,
   }
 )
 class PostPanel extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      pmIdSelected: null,
+      isSubmitting: false,
     }
   }
 
@@ -119,20 +123,39 @@ class PostPanel extends Component {
   }
 
   onPmSelect = (pmId) => {
-    this.setState({pmIdSelected: pmId})
+    this.props.setDraftInfo({
+      pmId,
+      time: Date.now(),
+    })
   }
 
   onPmDeselect = () => {
-    this.setState({pmIdSelected: null})
+    this.props.clearDraftInfo()
+  }
+
+  onSubmit = () => {
+    this.setState({isSubmitting: true})
+    const submitPromise = firebase.database().ref().child('posts').push({
+      ...this.props.draft,
+      userId: this.props.user.uid,
+    })
+    submitPromise
+      .then(() => {
+        this.props.clearDraftInfo()
+      })
+      .catch((error) => {
+      })
   }
 
   render() {
+    const {draft} = this.props
+    const pmSelected = draft.pmId != null
     return (
       <div className={css.postContainer}>
         <div className={css.pmSelector}>
-        {this.state.pmIdSelected ? 
+        {pmSelected ? 
           <PokemonSelected
-            pmId={this.state.pmIdSelected}
+            pmId={draft.pmId}
             onDeselect={this.onPmDeselect}
           />
          :
@@ -144,14 +167,15 @@ class PostPanel extends Component {
         <div className={css.actionRow}>
           <div className={css.actionRowFiller}></div>
           <Button
-            disabled={!this.state.pmIdSelected}
+            disabled={!pmSelected}
             onClick={this.onPmDeselect}
           >
             Clear
           </Button>
           <Button
             bsStyle="primary"
-            disabled={!this.state.pmIdSelected}
+            disabled={!pmSelected || this.state.isSubmitting}
+            onClick={this.onSubmit}
           >
             Post!
           </Button>
