@@ -41,29 +41,33 @@ class PokemonFilterInput extends Component {
           inputClassName='form-control'
           placeholder='Which Pokemon did you catch just now?'
         />
-        {filteredPokemons &&
-          <div className={css.searchResult}>
-          {
-            filteredPokemons.map((pokemon) => {
-              return (
-                <div
-                  className={css.searchResultItem}
-                  key={pokemon.id}
-                  onClick={this.props.onSelect.bind(this, pokemon.id)}
-                  >
-                  <div className={css.resultLeft}>
-                    <PmImg id={pokemon.id} />
+        <div className={css.searchResultPositioner}>
+          {filteredPokemons &&
+            <div className={css.searchResult}>
+            {
+              filteredPokemons.map((pokemon) => {
+                return (
+                  <div className={css.searchResultItem}>
+                    <div
+                      className={css.searchResultWrapper}
+                      key={pokemon.id}
+                      onClick={this.props.onSelect.bind(this, pokemon.id)}
+                      >
+                      <div className={css.resultLeft}>
+                        <PmImg id={pokemon.id} />
+                      </div>
+                      <div className={css.resultRight}>
+                        <div className={css.resultId}>No. {pokemon.id}</div>
+                        <div className={css.resultName}>{pokemon.name}</div>
+                      </div>
+                    </div>
                   </div>
-                  <div className={css.resultRight}>
-                    <div className={css.resultId}>No. {pokemon.id}</div>
-                    <div className={css.resultName}>{pokemon.name}</div>
-                  </div>
-                </div>
-              )
-            })
+                )
+              })
+            }
+            </div>
           }
-          </div>
-        }
+        </div>
       </div>
     )
   }
@@ -86,9 +90,6 @@ class PokemonSelected extends Component {
             <FontAwesome name='clock-o' className={css.toPostLineIcon} />
             <span className={css.toPostLineContents}>Just now</span>
           </div>
-        </div>
-        <div onClick={this.props.onDeselect}>
-          <FontAwesome name='times'/>
         </div>
       </div>
     )

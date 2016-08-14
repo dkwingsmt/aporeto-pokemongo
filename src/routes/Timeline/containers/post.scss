@@ -21,45 +21,60 @@ $resultHeight: 40px;
   }
 }
 
+.searchResultPositioner {
+  height: 0;
+  width: 0;
+}
+
 .searchResult {
   background-color: white;
+  position: absolute;
+  width: calc(100vw - 68px);
+  z-index: 1;
 }
 
 .searchResultItem {
   background-color: white;
-  display: flex;
+  display: block;
   padding: 3px;
   border: 1px solid #ddd;
+  margin-top: -1px;
 
   &:hover {
     background-color: grey;
   }
 
-  .resultLeft {
-    display: inline-block;
-    width: $resultHeight;
-    height: $resultHeight;
-  }
+}
 
-  .resultRight {
-    display: inline-block;
-    flex: 1;
-    padding: 5px 9px;
+.searchResultWrapper {
+  display: flex;
+}
 
-    .resultId {
-      text-align: left;
-      display: block;
-      font-size: 12px;
-      line-height: 10px;
-      color: #999;
-    }
-    .resultName {
-      text-align: left;
-      display: block;
-      font-size: 16px;
-      color: #333;
-    }
-  }
+.resultLeft {
+  display: inline-block;
+  width: $resultHeight;
+  height: $resultHeight;
+}
+
+.resultRight {
+  display: inline-block;
+  flex: 1;
+  padding: 5px 9px;
+}
+
+.resultId {
+  text-align: left;
+  display: block;
+  font-size: 12px;
+  line-height: 10px;
+  color: #999;
+}
+
+.resultName {
+  text-align: left;
+  display: block;
+  font-size: 16px;
+  color: #333;
 }
 
 .toPost {
