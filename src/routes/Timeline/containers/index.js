@@ -27,6 +27,11 @@ class TimelineContainer extends Component {
     this.props.timelineError()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.user)
+      this.props.router.push('/login')
+  }
+
   render() {
     const {alert, posts} = this.props
     const postList = orderBy(map(posts, (post, key) => ({...post, postId: key})), 'time', 'desc')

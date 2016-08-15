@@ -22,11 +22,13 @@ export default function reducer(state={}, action) {
     case LOGIN_SUCCESS:
       return {
         ...state,
+        valid: true,
         user: action.user,
       }
     case LOGOUT_SUCCESS:
       return {
         ...state,
+        valid: true,
         user: undefined,
         token: undefined,
         provider: undefined,
@@ -34,6 +36,7 @@ export default function reducer(state={}, action) {
     case '@@Login/OAuth2@then':
       return {
         ...state,
+        valid: true,
         user: result.user,
         token: result.credential.accessToken,
         provider: args.provider,

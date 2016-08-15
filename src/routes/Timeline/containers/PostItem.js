@@ -56,7 +56,7 @@ export default
 @withRouter
 @connect(
   (state) => ({
-    uid: state.auth.user.uid,
+    uid: get(state, 'auth.user.uid'),
     token: state.auth.token,
   }),
 )

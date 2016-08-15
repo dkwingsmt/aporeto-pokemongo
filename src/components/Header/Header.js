@@ -42,18 +42,11 @@ class Header extends Component {
       <Navbar inverse>
         <Navbar.Header>
           <Navbar.Brand>
-            <IndexLink to={loggedIn ? '/timeline' : '/login'}>PokéShare</IndexLink>
+            <IndexLink to={loggedIn ? '/timeline' : '/'}>PokéShare</IndexLink>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
-          <Nav>
-          {loggedIn &&
-            <LinkContainer to='/timeline'>
-              <NavItem>Post</NavItem>
-            </LinkContainer>
-          }
-          </Nav>
           <Nav pullRight>
           {loggedIn && [
             <NavItem key='name'>{user.displayName}</NavItem>,
@@ -64,12 +57,11 @@ class Header extends Component {
                 firebase.auth().signOut()
                   .then(() => {
                     this.props.logoutSuccess()
-                    this.props.router.push('/login')
                   })
                   .catch((e) => {
                     this.setState({
                       showModal: true,
-                      modalError: e.message,
+                      modalError: e.stack,
                     })
                   })
               }}
