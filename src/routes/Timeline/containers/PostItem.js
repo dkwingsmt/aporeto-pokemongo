@@ -9,6 +9,7 @@ import ProfileImage from 'components/ProfileImage'
 import css from './timeline.scss'
 import classNames from 'classnames'
 import pokemonsObject from 'static/pokemons.json'
+import { changeCountValue } from '../modules/counts'
 
 
 @connect(
@@ -16,8 +17,16 @@ import pokemonsObject from 'static/pokemons.json'
     count: get(state, ['counts', postId, type], {}),
     myCount: get(state, ['counts', postId, type, uid], false),
   }),
+  {
+    changeCountValue,
+  }
 )
 class CountIcon extends Component {
+  onClick = () => {
+    const {postId, type, uid, myCount} = this.props
+    this.props.changeCountValue(postId, type, uid, !myCount)
+  }
+
   render() {
     const {type, count, myCount} = this.props
     const icon = type === 'like' ? '👍' :
@@ -30,7 +39,7 @@ class CountIcon extends Component {
     })
     return icon ? (
       <div className={wrapperClass}>
-        <Button>
+        <Button onClick={this.onClick}>
           <div className={css.icon}>{icon}</div>
           {!!countText &&
             <div className={css.countText}>
