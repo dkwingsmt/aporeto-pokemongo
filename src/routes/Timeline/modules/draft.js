@@ -1,5 +1,5 @@
 import Promise from 'bluebird'
-import { pick } from 'lodash'
+import { pick, pickBy } from 'lodash'
 import firebase from 'firebase'
 import { PromiseAction } from 'store/promise-action'
 
@@ -62,6 +62,7 @@ export default function reducer(state=initState, action) {
     case '@@Post/submit@then':
       return {
         ...state,
+        gpsFinding: false,
         contents: {
           ...state.contents,
           pmId: null,
@@ -113,7 +114,7 @@ export function submitPost(user, provider, draft) {
     provider,
   }
   return new PromiseAction('@@Post/submit', () => {
-    return firebase.database().ref('posts/').push(postContents)
+    return firebase.database().ref('posts/').push(pickBy(postContents, (o) => o != null))
   })
 }
 

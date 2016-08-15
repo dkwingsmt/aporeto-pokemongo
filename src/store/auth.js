@@ -24,6 +24,9 @@ export default function reducer(state={}, action) {
         ...state,
         valid: true,
         user: action.user,
+        // Hack. Should've directly used `facebook.com` as provider 
+        // instead of `facebook`
+        provider: action.user.providerData[0].providerId.split('.')[0],
       }
     case LOGOUT_SUCCESS:
       return {

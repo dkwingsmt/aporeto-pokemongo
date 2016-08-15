@@ -13,6 +13,7 @@ import css from './post.scss'
 import pokemonsObject from 'static/pokemons.json'
 import PmImg from 'components/PmImg'
 import AlertBar from 'components/AlertBar'
+import { gpsToText } from 'utils/utils'
 
 const fullPokemonList = map(pokemonsObject, (name, id) => ({id, name}))
 const KEYS_TO_FILTERS = ['id', 'name']
@@ -135,9 +136,9 @@ class PokemonSelected extends Component {
     const pokemon = pokemonsObject[pmId]
     const supportGps = !!navigator.geolocation
     const gpsEnabled = !!draft.gps
-    const gpsText = !gpsEnabled ? (gpsFinding ? 'Finding...' : 'Enable location') :
-      gps.name ? gps.name :
-      `${(gps.lon||0).toFixed(2)}, ${(gps.lat||0).toFixed(2)}`
+    const gpsText = !gpsEnabled
+      ? (gpsFinding ? 'Finding...' : 'Enable location')
+      : gpsToText(gps)
     const gpsTextClass = classNames(css.toPostLine, {
       [css.textDisabled]: !gpsEnabled,
     })

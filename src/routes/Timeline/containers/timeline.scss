@@ -17,6 +17,25 @@
   }
 }
 
+.gpsLine {
+  display: flex !important;
+  overflow: hidden;
+  color: #79b4d4;
+  font-size: smaller;
+
+  :global {
+    .fa {
+      margin-right: 5px;
+    }
+  }
+
+  .gpsSpan {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 .postLeft {
   width: 50px;
   height: 50px;
@@ -25,6 +44,7 @@
 .postMiddle {
   flex: 1;
   text-align: left;
+  overflow: hidden;
 
   color: #1b1b1b;
   padding: 0 8px;

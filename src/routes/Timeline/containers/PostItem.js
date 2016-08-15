@@ -5,11 +5,13 @@ import { filter, get } from 'lodash'
 import { Button } from 'react-bootstrap'
 import moment from 'moment'
 import PmImg from 'components/PmImg'
+import FontAwesome from 'react-fontawesome'
 import ProfileImage from 'components/ProfileImage'
 import css from './timeline.scss'
 import classNames from 'classnames'
 import pokemonsObject from 'static/pokemons.json'
 import { changeCountValue } from '../modules/counts'
+import { gpsToText } from 'utils/utils'
 
 
 @connect(
@@ -62,7 +64,7 @@ export default
 )
 class PostItem extends Component {
   render() {
-    const {uid, postId, photoURL, displayName, pmId, time} = this.props
+    const {uid, postId, photoURL, displayName, pmId, time, gps} = this.props
     const pmName = pokemonsObject[pmId]
     const timeAgo = moment.duration(time - Date.now()).humanize(true)
     return (
@@ -75,6 +77,12 @@ class PostItem extends Component {
             <div>
               <b>{displayName}</b> caught <b>{pmName}</b> <span className={css.time}>{timeAgo}</span>
             </div>
+            {!!gps &&
+              <div className={css.gpsLine}>
+                <FontAwesome name='map-marker' />
+                <span className={css.gpsSpan}>{gpsToText(gps)}</span>
+              </div>
+            }
           </div>
           <div className={css.postRight}>
             <PmImg id={pmId} />
