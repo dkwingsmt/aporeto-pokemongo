@@ -37,9 +37,27 @@ class PokemonFilterInput extends Component {
     this.setState({selected: false})
   }
 
+  renderSearchResultItem = (pokemon) => 
+    <div key={pokemon.id} className={css.searchResultItem}>
+      <div
+        className={css.searchResultWrapper}
+        onClick={(e) => {
+          this.props.onSelect(pokemon.id)
+        }}
+        >
+        <div className={css.resultLeft}>
+          <PmImg id={pokemon.id} />
+        </div>
+        <div className={css.resultRight}>
+          <div className={css.resultId}>No. {pokemon.id}</div>
+          <div className={css.resultName}>{pokemon.name}</div>
+        </div>
+      </div>
+    </div>
+
   render() {
     const MAX_PM = 5
-    const hasInputTerm = this.state.searchTerm.length
+    const hasInputTerm = !!this.state.searchTerm.length
     const pokemonFilter = createFilter(this.state.searchTerm, KEYS_TO_FILTERS)
     const filteredPokemons = hasInputTerm ? 
       fullPokemonList.filter(pokemonFilter).slice(0, MAX_PM) :
@@ -55,33 +73,25 @@ class PokemonFilterInput extends Component {
           placeholder='Which Pokemon did you catch just now?'
         />
         <div className={css.searchResultPositioner}>
-          {this.state.selected &&
-            <div className={css.searchResult}>
-            {(this.state.selected && !hasInputTerm)
-              ? <div className={`${css.searchResultItem} ${css.searchPrompt}`}>
-                  Input <em>name</em> or <em>ID</em> to search
-                </div>
-              : filteredPokemons.map((pokemon) => {
-                return (
-                  <div key={pokemon.id} className={css.searchResultItem}>
-                    <div
-                      className={css.searchResultWrapper}
-                      onClick={this.props.onSelect.bind(this, pokemon.id)}
-                      >
-                      <div className={css.resultLeft}>
-                        <PmImg id={pokemon.id} />
-                      </div>
-                      <div className={css.resultRight}>
-                        <div className={css.resultId}>No. {pokemon.id}</div>
-                        <div className={css.resultName}>{pokemon.name}</div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })
-            }
+        {!hasInputTerm && this.state.selected &&
+          <div className={css.searchResult}>
+            <div className={`${css.searchResultItem} ${css.searchPrompt}`}>
+              Input <em>name</em> or <em>ID</em> to search
             </div>
+          </div>
+        }
+        {hasInputTerm && (
+          <div className={css.searchResult}>
+          {
+            filteredPokemons.length ? (
+              filteredPokemons.map(this.renderSearchResultItem)
+            ) : (
+              <div className={css.searchResultItem}>
+              </div>
+            )
           }
+          </div>
+        )}
         </div>
       </div>
     )
