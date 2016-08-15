@@ -4,12 +4,10 @@ import firebase from 'firebase'
 import { useRouterHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { get } from 'lodash'
-import { observe } from 'redux-observers'
 import createBrowserHistory from 'history/lib/createBrowserHistory'
 import createStore from './store/createStore'
 import { loginSuccess, logoutSuccess } from './store/auth'
 import AppContainer from './containers/AppContainer'
-import { currentUserObserver } from './store/observers'
 
 // Initialize Firebase
 firebase.initializeApp({
@@ -49,7 +47,6 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 })
 
-observe(store, [currentUserObserver])
 
 // ========================================================
 // Developer Tools Setup

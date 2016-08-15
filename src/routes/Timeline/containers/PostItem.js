@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { get } from 'lodash'
+import { filter, get } from 'lodash'
 import { Button } from 'react-bootstrap'
 import moment from 'moment'
 import PmImg from 'components/PmImg'
@@ -13,8 +13,8 @@ import pokemonsObject from 'static/pokemons.json'
 
 @connect(
   (state, {postId, type, uid}) => ({
-    count: get(state, ['counts', postId, type], 0),
-    myCount: get(state, ['counts', postId, type, uid], 0),
+    count: get(state, ['counts', postId, type], {}),
+    myCount: get(state, ['counts', postId, type, uid], false),
   }),
 )
 class CountIcon extends Component {
@@ -23,7 +23,8 @@ class CountIcon extends Component {
     const icon = type === 'like' ? '👍' :
                  type === 'kiss' ? '😘' :
                  type === 'angry' ? '😡' : undefined
-    const countText = count || undefined
+    const countNumber = filter(count, (v, k) => v).length
+    const countText = countNumber || undefined
     const wrapperClass = classNames(css.iconWrapper, {
       [css.iconWrapperActive]: myCount,
     })
@@ -46,18 +47,13 @@ export default
 @withRouter
 @connect(
   (state) => ({
+    uid: state.auth.user.uid,
     token: state.auth.token,
   }),
 )
 class PostItem extends Component {
-  componentWillMount() {
-  }
-
-  componentWillUnmount() {
-  }
-
   render() {
-    const {photoURL, displayName, pmId, time} = this.props
+    const {uid, postId, photoURL, displayName, pmId, time} = this.props
     const pmName = pokemonsObject[pmId]
     const timeAgo = moment.duration(time - Date.now()).humanize(true)
     return (
@@ -76,9 +72,9 @@ class PostItem extends Component {
           </div>
         </div>
         <div className={css.postBottom}>
-          <CountIcon type='like' />
-          <CountIcon type='kiss' />
-          <CountIcon type='angry' />
+          <CountIcon postId={postId} uid={uid} type='like' />
+          <CountIcon postId={postId} uid={uid} type='kiss' />
+          <CountIcon postId={postId} uid={uid} type='angry' />
         </div>
       </div>
     )

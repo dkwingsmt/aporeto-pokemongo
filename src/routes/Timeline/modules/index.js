@@ -23,7 +23,7 @@ function alertReducer(state={}, action) {
     case '@@Timeline@Error':
       return {
         type: 'error',
-        detail: action.error || undefined
+        detail: action.error || undefined,
       }
   }
   return state

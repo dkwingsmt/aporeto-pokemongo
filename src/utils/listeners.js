@@ -10,7 +10,6 @@ function listenerAddPost(data) {
 export function listenToUserPost(dispatch, userId) {
   listeningUser[userId] = true
   const commentsRef = firebase.database().ref('posts/')
-  commentsRef.off('child_added', listenerAddPost)
   commentsRef.on('child_added', listenerAddPost, {dispatch})
 }
 

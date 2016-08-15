@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { FacebookButton } from 'react-social'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { Button } from 'react-bootstrap'

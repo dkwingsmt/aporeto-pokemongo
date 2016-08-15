@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { map } from 'lodash'
+import { map, orderBy } from 'lodash'
 import { logoutSuccess } from 'store/auth'
 import { timelineError } from '../modules'
 import PostPanel from './post'
@@ -29,13 +29,14 @@ class TimelineContainer extends Component {
 
   render() {
     const {alert, posts} = this.props
+    const postList = orderBy(map(posts, (post, key) => ({...post, postId: key})), 'time', 'desc')
     return (
       <div>
         <AlertBar {...alert} />
         <PostPanel />
         <div>
-        {map(posts, (post, key) =>
-          <PostItem {...post} key={key} />
+        {postList.map((post) =>
+          <PostItem {...post} key={post.time} />
         )}
         </div>
       </div>

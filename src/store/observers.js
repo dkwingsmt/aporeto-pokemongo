@@ -9,7 +9,7 @@ export const currentUserObserver = observer(
       clearListeningUserPost(previous.uid)
     }
     if (current) {
-      dispatch(clearAllPosts)
+      //dispatch(clearAllPosts)
       listenToUserPost(dispatch, current.uid)
     }
   }
