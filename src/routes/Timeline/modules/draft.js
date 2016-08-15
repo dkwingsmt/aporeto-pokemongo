@@ -75,8 +75,10 @@ export default function reducer(state=initState, action) {
     case '@@Post/submit@catch':
     case '@@Post/findPosition@catch':
     case '@@Post/findPositionName@catch':
+      console.log(error.stack)
       return {
         ...state,
+        gpsFinding: false,
         alert: {
           type: 'error',
           detail: error,
@@ -124,6 +126,9 @@ export function findPosition() {
       navigator.geolocation.getCurrentPosition((position) => {
         console.log(position)
         resolve(position)
+      }, (e) => reject(e), {
+        timeout: 5000,
+        maximumAge: 0,
       })
     } catch(e) {
       reject(e)

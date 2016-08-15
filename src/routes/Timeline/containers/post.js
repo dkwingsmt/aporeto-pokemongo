@@ -125,7 +125,8 @@ class PokemonSelected extends Component {
       })
     } else {
       this.props.findPosition().then(({result}) => {
-        this.props.findPositionName(result)
+        if (result)
+          this.props.findPositionName(result)
       })
     }
   }
