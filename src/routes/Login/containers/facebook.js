@@ -3,8 +3,10 @@ import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { Button } from 'react-bootstrap'
 import AlertBar from 'components/AlertBar'
+import FontAwesome from 'react-fontawesome'
 import { loginOAuth2 } from '../modules'
 //import { PromiseAction } from 'store/promise-action'
+import css from './login.scss'
 
 import provider from 'auth/providers/facebook'
 
@@ -31,7 +33,8 @@ class LoginContainer extends Component {
     return (
       <div>
         <AlertBar {...alert} />
-        <Button className="zocial facebook" onClick={this.onSignIn} >
+        <Button className={css.facebookLogin} onClick={this.onSignIn} >
+          <FontAwesome name='facebook-official' inverse className={css.facebookIcon} />
           Facebook
         </Button>
       </div>

@@ -45,7 +45,10 @@ class LoginContainer extends Component {
     return valid ? (
       <div>
         <AlertBar {...alert} />
-        <FacebookLogin />
+        <h4>You can login via</h4>
+        <div className={css.loginWrapper}>
+          <FacebookLogin />
+        </div>
       </div>
     ) : <LoginLoading />
   }

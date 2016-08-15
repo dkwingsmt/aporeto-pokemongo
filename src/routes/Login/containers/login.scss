@@ -1,0 +1,33 @@
+.staticModal :global {
+.modal {
+  position: relative;
+  top: auto;
+  right: auto;
+  left: auto;
+  bottom: auto;
+  z-index: 1;
+  display: block;
+}
+}
+
+.loginWrapper {
+  margin: 20px auto;
+}
+
+$facebookColor: #4d729f;
+$loginWidth: 150px;
+
+.facebookLogin {
+  background-color: #4d729f;
+  border-radius: 4px;
+  width: $loginWidth;
+  color: white;
+  font-weight: bold;
+  border: 0;
+}
+
+.facebookIcon {
+  font-size: large;
+  margin-right: 10px;
+  vertical-align: middle;
+}
