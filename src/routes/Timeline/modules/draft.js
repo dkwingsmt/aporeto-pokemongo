@@ -8,8 +8,13 @@ const initState = {
 }
 
 export default function reducer(state=initState, action) {
-  const {type, contents} = action
+  const {type, object, contents, result, error} = action
   switch (type) {
+    case '@@Post/setDraftProperty':
+      return {
+        ...state,
+        ...object,
+      }
     case '@@Post/setDraftInfo':
       return {
         ...state,
@@ -23,14 +28,37 @@ export default function reducer(state=initState, action) {
         ...state,
         contents: {},
       }
-    case '@@Post/submit@catch':
+    case '@@Post/findPosition':
       return {
         ...state,
-        alert: {
-          type: 'error',
-          detail: action.error,
-        },
+        gpsFinding: true,
       }
+    case '@@Post/findPosition@then':
+      if (state.gpsFinding)
+        return {
+          ...state,
+          contents: {
+            ...state.contents,
+            gps: {
+              lon: result.coords.longitude,
+              lat: result.coords.latitude,
+            }
+          },
+        }
+      break
+    case '@@Post/findPositionName@then':
+      if (state.gpsFinding)
+        return {
+          ...state,
+          contents: {
+            ...state.contents,
+            gps: {
+              ...state.contents.gps,
+              name: result,
+            }
+          },
+        }
+      break
     case '@@Post/submit@then':
       return {
         ...state,
@@ -43,8 +71,25 @@ export default function reducer(state=initState, action) {
           detail: {message: 'Successfully posted!'},
         },
       }
+    case '@@Post/submit@catch':
+    case '@@Post/findPosition@catch':
+    case '@@Post/findPositionName@catch':
+      return {
+        ...state,
+        alert: {
+          type: 'error',
+          detail: error,
+        },
+      }
   }
   return state
+}
+
+export function setDraftProperty(object) {
+  return {
+    type: '@@Post/setDraftProperty',
+    object,
+  }
 }
 
 export function setDraftInfo(contents) {
@@ -69,5 +114,39 @@ export function submitPost(user, provider, draft) {
   }
   return new PromiseAction('@@Post/submit', () => {
     return firebase.database().ref('posts/').push(postContents)
+  })
+}
+
+export function findPosition() {
+  const promiseThunk = () => new Promise((resolve, reject) => {
+    try {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log(position)
+        resolve(position)
+      })
+    } catch(e) {
+      reject(e)
+    }
+  })
+  return new PromiseAction('@@Post/findPosition', promiseThunk)
+}
+
+export function findPositionName(position) {
+  return new PromiseAction('@@Post/findPositionName', async () => {
+    const {latitude, longitude} = position.coords
+    const url = `http://nominatim.openstreetmap.org/reverse?zoom=18&addressdetails=0&accept-language=en&format=json&lat=${latitude}&lon=${longitude}`
+    console.log(url)
+    const response = await fetch(url, {
+      method: 'GET', 
+      headers: new Headers({'Content-Type': 'application/json'}),
+    })
+    console.log(response)
+    if (!response || !response.json)
+      return
+    const json = await response.json()
+    console.log(json)
+    if (!json.display_name)
+      return
+    return json.display_name
   })
 }

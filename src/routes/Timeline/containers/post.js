@@ -5,9 +5,10 @@ import { Button } from 'react-bootstrap'
 //import { Link } from 'react-router'
 import SearchInput, { createFilter } from 'react-search-input'
 import { map } from 'lodash'
+import classNames from 'classnames'
 
 import { postError } from '../modules'
-import { submitPost, setDraftInfo, clearDraftInfo } from '../modules/draft'
+import { submitPost, setDraftProperty, setDraftInfo, clearDraftInfo, findPosition, findPositionName } from '../modules/draft'
 import css from './post.scss'
 import pokemonsObject from 'static/pokemons.json'
 import PmImg from 'components/PmImg'
@@ -98,9 +99,48 @@ class PokemonFilterInput extends Component {
   }
 }
 
+@connect(
+  (state) => ({
+    draft: state.timeline.draft.contents,
+    gpsFinding: state.timeline.draft.gpsFinding,
+  }),
+  {
+    setDraftInfo,
+    setDraftProperty,
+    findPosition,
+    findPositionName,
+  }
+)
 class PokemonSelected extends Component {
+
+  onToggleGps = () => {
+    const hasGps = this.props.draft.gps || this.props.gpsFinding
+    if (hasGps) {
+      this.props.setDraftInfo({
+        gps: undefined,
+      })
+      this.props.setDraftProperty({
+        gpsFinding: false,
+      })
+    } else {
+      this.props.findPosition().then(({result}) => {
+        this.props.findPositionName(result)
+      })
+    }
+  }
+
   render() {
-    const pokemon = pokemonsObject[this.props.pmId]
+    const {draft, pmId, gpsFinding} = this.props
+    const {gps={}} = draft
+    const pokemon = pokemonsObject[pmId]
+    const supportGps = !!navigator.geolocation
+    const gpsEnabled = !!draft.gps
+    const gpsText = !gpsEnabled ? (gpsFinding ? 'Finding...' : 'Enable location') :
+      gps.name ? gps.name :
+      `${(gps.lon||0).toFixed(2)}, ${(gps.lat||0).toFixed(2)}`
+    const gpsTextClass = classNames(css.toPostLine, {
+      [css.textDisabled]: !gpsEnabled,
+    })
     return (
       <div className={css.toPost}>
         <div className={css.toPostLeft}>
@@ -108,13 +148,19 @@ class PokemonSelected extends Component {
         </div>
         <div className={css.toPostRight}>
           <div className={css.toPostLine}>
-            <FontAwesome name='dot-circle-o' className={css.toPostLineIcon} />
-            <span className={css.toPostLineContents}>{pokemon}</span>
+            <FontAwesome name='dot-circle-o' />
+            <div>{pokemon}</div>
           </div>
           <div className={css.toPostLine}>
-            <FontAwesome name='clock-o' className={css.toPostLineIcon} />
-            <span className={css.toPostLineContents}>Just now</span>
+            <FontAwesome name='clock-o' />
+            <div>Just now</div>
           </div>
+          {supportGps &&
+            <div className={gpsTextClass} onClick={this.onToggleGps} >
+              <FontAwesome name='map-marker' />
+              <div>{gpsText}</div>
+            </div>
+          }
         </div>
       </div>
     )

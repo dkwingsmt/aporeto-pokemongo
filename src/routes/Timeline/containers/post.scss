@@ -84,6 +84,7 @@ $resultHeight: 40px;
 
 .toPost {
   display: flex;
+  overflow: hidden;
 
   .toPostLeft {
     display: inline-block;
@@ -98,15 +99,27 @@ $resultHeight: 40px;
       border-bottom: 1px solid #dddddd;
       margin-top: 3px;
       text-align: left;
+      color: #777;
+      display: flex;
 
-      .toPostLineIcon {
-        color: #777;
-        margin-right: 7px;
+      :global {
+        .fa {
+          width: 11px;
+          text-align: center;
+          margin-right: 7px;
+        }
       }
 
-      .toPostLineContents {
-        color: #777;
+      div {
+        display: inline;
+        flex: 1;
+        white-space: nowrap;
       }
+
+    }
+
+    .textDisabled {
+      color: #ccc;
     }
   }
 }
