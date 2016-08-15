@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import firebase from 'firebase'
+import 'whatwg-fetch'
 import { useRouterHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { get } from 'lodash'

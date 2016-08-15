@@ -140,7 +140,7 @@ export function findPosition() {
 export function findPositionName(position) {
   return new PromiseAction('@@Post/findPositionName', async () => {
     const {latitude, longitude} = position.coords
-    const url = `http://nominatim.openstreetmap.org/reverse?zoom=18&addressdetails=0&accept-language=en&format=json&lat=${latitude}&lon=${longitude}`
+    const url = `https://nominatim.openstreetmap.org/reverse?zoom=18&addressdetails=0&accept-language=en&format=json&lat=${latitude}&lon=${longitude}`
     console.log(url)
     const response = await fetch(url, {
       method: 'GET', 
