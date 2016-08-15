@@ -21,6 +21,7 @@ class PokemonFilterInput extends Component {
     super(props)
     this.state = {
       searchTerm: '',
+      selected: false,
     }
   }
   
@@ -28,10 +29,19 @@ class PokemonFilterInput extends Component {
     this.setState({searchTerm: term})
   }
 
+  onSelect = () => {
+    this.setState({selected: true})
+  }
+
+  onBlur = () => {
+    this.setState({selected: false})
+  }
+
   render() {
     const MAX_PM = 5
+    const hasInputTerm = this.state.searchTerm.length
     const pokemonFilter = createFilter(this.state.searchTerm, KEYS_TO_FILTERS)
-    const filteredPokemons = this.state.searchTerm.length ? 
+    const filteredPokemons = hasInputTerm ? 
       fullPokemonList.filter(pokemonFilter).slice(0, MAX_PM) :
       undefined
     return (
@@ -39,14 +49,19 @@ class PokemonFilterInput extends Component {
         <SearchInput
           className={`${css.searchInput} input-group`}
           onChange={this.searchUpdated}
+          onClick={this.onSelect}
+          onBlur={this.onBlur}
           inputClassName='form-control'
           placeholder='Which Pokemon did you catch just now?'
         />
         <div className={css.searchResultPositioner}>
-          {filteredPokemons &&
+          {this.state.selected &&
             <div className={css.searchResult}>
-            {
-              filteredPokemons.map((pokemon) => {
+            {(this.state.selected && !hasInputTerm)
+              ? <div className={`${css.searchResultItem} ${css.searchPrompt}`}>
+                  Input <em>name</em> or <em>ID</em> to search
+                </div>
+              : filteredPokemons.map((pokemon) => {
                 return (
                   <div key={pokemon.id} className={css.searchResultItem}>
                     <div
