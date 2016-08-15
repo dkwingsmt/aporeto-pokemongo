@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter, Link } from 'react-router'
-import firebase from 'firebase'
+import { withRouter } from 'react-router'
+import { map } from 'lodash'
 import { logoutSuccess } from 'store/auth'
 import { timelineError } from '../modules'
 import PostPanel from './post'
 import AlertBar from 'components/AlertBar'
+import pokemonsObject from 'static/pokemons.json'
+import PostItem from './PostItem'
 
 export default
 @withRouter
@@ -13,6 +15,7 @@ export default
   (state) => ({
     user: state.auth.user,
     alert: state.timeline.alert,
+    posts: state.timeline.posts,
   }),
   {
     timelineError,
@@ -25,23 +28,16 @@ class TimelineContainer extends Component {
   }
 
   render() {
-    const {user, error} = this.props
+    const {alert, posts} = this.props
     return (
       <div>
-        <AlertBar {...this.props.alert} />
+        <AlertBar {...alert} />
         <PostPanel />
-        {user ? `Logged in! ${user.uid}` : 'Didnt log in'}
-        <Link to='/logout' onClick={(e) => {
-          e.preventDefault()
-          firebase.auth().signOut()
-            .then(() => {
-              this.props.logoutSuccess()
-              this.props.router.push('/login')
-            })
-            .catch((e) => this.props.timelineError(e))
-        }}>
-          Log out
-        </Link>
+        <div>
+        {map(posts, (post, key) =>
+          <PostItem {...post} key={key} />
+        )}
+        </div>
       </div>
     )
   }

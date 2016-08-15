@@ -6,12 +6,12 @@ export default (store) => ({
   onEnter: mustLoggedOut(store),
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
-      const Google = require('./containers/google').default
+      const container = require('./containers').default
       const reducer = require('./modules').default
 
       injectReducer(store, { key: 'login', reducer })
 
-      cb(null, Google)
+      cb(null, container)
 
     }, 'login')
   },

@@ -1,3 +1,5 @@
+//import { get } from 'lodash'
+
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
 
@@ -15,7 +17,7 @@ export function logoutSuccess() {
 }
 
 export default function reducer(state={}, action) {
-  const {type} = action
+  const {type, result, args} = action
   switch (type) {
     case LOGIN_SUCCESS:
       return {
@@ -26,6 +28,15 @@ export default function reducer(state={}, action) {
       return {
         ...state,
         user: undefined,
+        token: undefined,
+        provider: undefined,
+      }
+    case '@@Login/OAuth2@then':
+      return {
+        ...state,
+        user: result.user,
+        token: result.credential.accessToken,
+        provider: args.provider,
       }
   }
   return state

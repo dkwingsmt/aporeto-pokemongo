@@ -8,7 +8,7 @@ export default (initialState = {}, history) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [promiseActionMiddleware, thunk, routerMiddleware(history)]
+  const middleware = [thunk, promiseActionMiddleware, routerMiddleware(history)]
 
   // ======================================================
   // Store Enhancers

@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { withRouter, IndexLink } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
 import { connect } from 'react-redux'
-import { Navbar, Nav, NavItem } from 'react-bootstrap'
+import { Button, Modal, Navbar, Nav, NavItem } from 'react-bootstrap'
 import firebase from 'firebase'
+import { logoutSuccess } from 'store/auth'
 //import css from './Header.scss'
 
 
@@ -13,8 +14,27 @@ export default
   (state) => ({
     user: state.auth.user,
   }),
+  {
+    logoutSuccess,
+  }
 )
 class Header extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      showModal: false,
+      modalError: '',
+    }
+  }
+
+  close = () => {
+    this.setState({showModal: false})
+  }
+
+  open = () => {
+    this.setState({showModal: true})
+  }
+
   render() {
     const user = this.props.user
     const loggedIn = !!this.props.user
@@ -46,7 +66,12 @@ class Header extends Component {
                     this.props.logoutSuccess()
                     this.props.router.push('/login')
                   })
-                  .catch((e) => this.props.timelineError(e))
+                  .catch((e) => {
+                    this.setState({
+                      showModal: true,
+                      modalError: e.message,
+                    })
+                  })
               }}
             >
               <NavItem>Log out</NavItem>
@@ -59,6 +84,17 @@ class Header extends Component {
           }
           </Nav>
         </Navbar.Collapse>
+        <Modal show={this.state.showModal} onHide={this.close}>
+          <Modal.Header closeButton>
+            <Modal.Title>Error</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>{this.state.modalError}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.close}>Close</Button>
+          </Modal.Footer>
+        </Modal>
       </Navbar>
     )
   }

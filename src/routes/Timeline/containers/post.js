@@ -48,10 +48,9 @@ class PokemonFilterInput extends Component {
             {
               filteredPokemons.map((pokemon) => {
                 return (
-                  <div className={css.searchResultItem}>
+                  <div key={pokemon.id} className={css.searchResultItem}>
                     <div
                       className={css.searchResultWrapper}
-                      key={pokemon.id}
                       onClick={this.props.onSelect.bind(this, pokemon.id)}
                       >
                       <div className={css.resultLeft}>
@@ -103,6 +102,7 @@ export default
     user: state.auth.user,
     draft: state.timeline.draft.contents,
     alert: state.timeline.draft.alert,
+    provider: state.auth.provider,
   }),
   {
     submitPost,
@@ -136,7 +136,7 @@ class PostPanel extends Component {
 
   onSubmit = () => {
     this.setState({isSubmitting: true})
-    this.props.submitPost(this.props.user.uid)
+    this.props.submitPost(this.props.user, this.props.provider, this.props.draft)
       .then(() => {
         this.setState({isSubmitting: false})
       })

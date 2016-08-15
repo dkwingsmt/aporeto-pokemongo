@@ -1,4 +1,5 @@
 import Promise from 'bluebird'
+import { pick } from 'lodash'
 import firebase from 'firebase'
 import { PromiseAction } from 'store/promise-action'
 
@@ -39,7 +40,7 @@ export default function reducer(state=initState, action) {
         },
         alert: {
           type: 'success',
-          detail: 'Successfully posted!',
+          detail: {message: 'Successfully posted!'},
         },
       }
   }
@@ -59,14 +60,14 @@ export function clearDraftInfo(contents) {
   }
 }
 
-export function submitPost(userId, draft) {
+export function submitPost(user, provider, draft) {
+  const selectedUser = pick(user, ['displayName', 'photoURL', 'email', 'providerData', 'uid'])
   const postContents = {
+    ...selectedUser,
     ...draft,
-    userId: userId,
+    provider,
   }
   return new PromiseAction('@@Post/submit', () => {
-    if (postContents.userId)
-      return Promise.reject(new Error('userId must not be empty'))
-    return firebase.database().ref('posts/' + userId).push(postContents)
+    return firebase.database().ref('posts/').push(postContents)
   })
 }
